@@ -8,7 +8,7 @@ echo "this script is started execution at : $TIMESTAMP" &>> $LOGFILE
 TIMESTAMP=$(date -%F)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 
-cp /root/Loknath/roboshop-shell-1/mongo.repo /etc/yum.repos.d/mongodb-org.repo
+cp /root/Loknath/roboshop-shell-1/mongodb-org.repo /etc/yum.repos.d/mongodb-org.repo
 sudo yum install -y mongodb-org
 systemctl enable mongod
 systemctl start mongod
