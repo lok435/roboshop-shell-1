@@ -4,15 +4,15 @@ G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
 
-echo "this script is started execution at : $TIMESTAMP" &>> $LOGFILE
-TIMESTAMP=$(date -%F)
+echo "This script is started execution at : $TIMESTAMP" &>> $LOGFILE
+TIMESTAMP=$(date)
 LOGFILE="/tmp/$0-$TIMESTAMP.log"
 VALIDATE(){
     if [ $1 -ne 0 ]
     then
-        echo "$2 .. failed"
+        echo -e "$R $2 .. failed$N"
     else
-        echo "$2 .. success"
+        echo -e "$G $2 .. success$N"
     fi
 }
 
@@ -20,18 +20,22 @@ cp .mongodb-org.repo /etc/yum.repos.d/mongodb-org.repo
 
 VALIDATE $1 "copying mongo-file"
 
-sudo yum install -y mongodb-org  &>> LOGFILE
+sudo yum install -y mongodb-org  &>> $LOGFILE
 
 VALIDATE $? "installation of mongodb"
 
-systemctl enable mongod
+systemctl enable mongod &>> $LOGFILE
 
 VALIDATE $? "enabling mongodb"
 
-systemctl start mongod
+systemctl start mongod &>> $LOGFILE
 
 VALIDATE $? "starting mongodb"
 
-sudo systemctl status mongod
-mongo --version
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf &>> $LOGFILE
 
+VALIDATE $? "remote access to mongod"
+
+systemctl restart mongod &>> $LOGFILE
+
+VALIDATE $? "restarting mongodb"
