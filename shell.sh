@@ -20,7 +20,7 @@ cp .mongodb-org.repo /etc/yum.repos.d/mongodb-org.repo
 
 VALIDATE $1 "copying mongo-file"
 
-mongod --version
+mongod --version &>> LOGFILE
 if [ $? -ne 0 ]
 then
     yum install -y mongodb-org  &>> $LOGFILE
